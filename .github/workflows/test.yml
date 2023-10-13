@@ -14,5 +14,11 @@ jobs:
               run: npm run build
             - name: Setup finish
               run: echo "Done!"
+    test-app:
+        needs: build-app
+        runs-on: ubuntu-latest
+        steps:
+            - name: Testing the dependent job
+              run: echo "This will run after build-app"
             
               
