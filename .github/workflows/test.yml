@@ -1,8 +1,10 @@
 name: Github Action
 on: [push]
 jobs:
-    build-app:
+    buildApp:
         runs-on: ubuntu-latest
+        outputs:
+            text: ${{ steps.finished.outputs.text }}
         steps:
             - uses: actions/checkout@v3
             - uses: actions/setup-node@v3
@@ -13,12 +15,15 @@ jobs:
             - name: Build the project
               run: npm run build
             - name: Setup finish
-              run: echo "Done!"
+              id: finished
+              run: echo "::set-output name=text::hello-world-from-build-job"
     test-app:
-        needs: build-app
+        needs: buildApp
         runs-on: ubuntu-latest
+        env:
+            MY_JOB_OUTOUT: ${{ needs.buildApp.outputs.text }}
         steps:
             - name: Testing the dependent job
-              run: echo "This will run after build-app"
+              run: echo $MY_JOB_OUTOUT
             
               
